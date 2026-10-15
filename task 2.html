@@ -1,0 +1,2536 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Foodie</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+        }
+        header {
+            background: linear-gradient(90deg, #3c09f2, #3f2bee);
+            color: white;
+            padding: 18px 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 25px;
+            font-size: 17px;
+            cursor: pointer;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .cart {
+            background-color: white;
+            color: #3c09f2;
+            padding: 8px 15px;
+            border-radius: 20px;
+            margin-left: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .logout-btn {
+            background-color: white;
+            color: #e64a19;
+            padding: 8px 15px;
+            border-radius: 20px;
+            margin-left: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            border: none;
+            font-size: 15px;
+        }
+        .logout-btn:hover {
+            background-color: #ffe0d6;
+        }
+        .hero {
+            background: linear-gradient(to right, #ff7043, #ffab91);
+            color: white;
+            text-align: center;
+            padding: 70px 20px;
+        }
+        .hero h1 {
+            font-size: 45px;
+            margin-bottom: 15px;
+        }
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 25px;
+        }
+        .search {
+            width: 60%;
+            padding: 15px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+        }
+        .categories {
+            text-align: center;
+            padding: 35px 20px;
+        }
+        .categories h2 {
+            margin-bottom: 25px;
+            font-size: 30px;
+        }
+        .category-container {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            flex-wrap: wrap;
+        }
+        .category {
+            background-color: white;
+            padding: 0;
+            width: 90px;
+            height: 70px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px #ccc;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            position: relative;
+        }
+        .category img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }   
+        .cat-name {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, .6);
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 3px 0;
+            text-align: center;
+        }
+        .category.active {
+            outline: 3px solid #ff5722;
+            outline-offset: -3px;
+        }
+        .category:hover,
+        .category.active {
+            background-color: #ff5722;
+            color: white;
+        }
+        .food-section {
+            padding: 20px 50px 50px;
+        }
+        .food-section h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 30px;
+        }
+        .food-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+        .food-card {
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px #ccc;
+            transition: 0.3s;
+            position: relative;
+            cursor: pointer;
+        }
+        .fav-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 19px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            color: #888;
+        }
+        .fav-btn.active {
+            color: #e64a19;
+        }
+        .order-card {
+            background: #fafafa;
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 12px;
+            border: 1px solid #e5e5e5;
+        }
+        .order-card .order-date {
+            font-size: 12.5px;
+            color: #888;
+            margin-bottom: 6px;
+        }
+        .order-card .order-items {
+            font-size: 14px;
+            color: #444;
+            margin-bottom: 8px;
+        }
+        .order-card .order-total {
+            font-weight: bold;
+            color: #e64a19;
+        }
+        .fav-item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .fav-item-row .fav-actions {
+            display: flex;
+            gap: 6px;
+        }
+        .fav-actions button {
+            border: none;
+            border-radius: 6px;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .fav-add-btn {
+            background: #ff5722;
+            color: white;
+        }
+        .fav-remove-btn {
+            background: #eee;
+            color: #333;
+        }
+        .food-card:hover {
+            transform: translateY(-8px);
+        }
+        .food-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .food-details {
+            padding: 18px;
+        }
+        .food-details h3 {
+            font-size: 22px;
+            margin-bottom: 8px;
+        }
+        .description {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .rating {
+            color: #ff9800;
+            margin-bottom: 10px;
+        }
+        .price {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .order-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background-color: #ff5722;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .order-btn:hover {
+            background-color: #e64a19;
+        }
+        .cart-box {
+            display: none;
+            position: fixed;
+            right: 20px;
+            top: 80px;
+            width: 350px;
+            max-height: 500px;
+            overflow-y: auto;
+            background-color: white;
+            box-shadow: 0 5px 20px #888;
+            border-radius: 12px;
+            padding: 20px;
+            z-index: 2000;
+        }
+        .cart-box h2 {
+            margin-bottom: 15px;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .cart-item button {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px 8px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .cart-total {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .checkout-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background-color: green;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .checkout-btn:hover {
+            background-color: darkgreen;
+        }
+        .empty {
+            text-align: center;
+            color: #777;
+            padding: 20px;
+        }
+        footer {
+            background-color: #222;
+            color: white;
+            text-align: center;
+            padding: 25px;
+            margin-top: 30px;
+        }
+        .cart-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+        .qty-btn {
+            width: 28px;
+            height: 28px;
+            border: none;
+            border-radius: 5px;
+            background: #3c09f2 !important;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .qty-number {
+            min-width: 24px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .clear-cart-btn {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            border: none;
+            border-radius: 8px;
+            background: #555;
+            color: white;
+            cursor: pointer;
+            padding-bottom: 5px;
+        }
+        .toast {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: #222;
+            color: white;
+            padding: 14px 20px;
+            border-radius: 10px;
+            display: none;
+            z-index: 5000;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .55);
+            z-index: 4000;
+            align-items: center;
+            justify-content: center;    
+        }
+        .modal-content {
+            background: white;
+            width: min(450px, 90%);
+            width: 550px;
+            padding: 25px;
+            box-shadow: 0 5px 25px #333;
+            border-radius: 10px;
+        }
+        .modal-content h2 {
+            margin-bottom: 15px;
+        }
+        .modal-content input {
+            width: 100%;
+            padding: 11px;
+            margin: 7px 0;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .modal-buttons button {
+            flex: 1;
+            padding: 11px;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+        .place-order {
+            background: green;
+            color: white;
+        }
+        .close-modal {
+            background: #ddd;
+        }
+        .bill-summary {
+            border-top: 1px solid #ddd;
+            margin-top: 15px;
+            padding-top: 15px;
+        }
+        .bill-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            font-size: 16px;
+        }
+        .bill-row.grand-total {
+            font-size: 21px;
+            font-weight: bold;
+            color: #e64a19;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+        .discount-row {
+            color: green;
+        }
+        .discount-row.hidden {
+            display: none;
+        }
+        .discount-badge {
+            display: inline-block;
+            background: #e8f5e9;
+            color: #2e7d32;
+            font-weight: bold;
+            font-size: 13px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            margin-left: 6px;
+        }
+        .promo-banner {
+            background: #fff3e0;
+            color: #e65100;
+            font-size: 13.5px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin: 8px 0 4px;
+            text-align: center;
+        }
+        .promo-banner.success {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        .details-content {
+            width: min(560px, 92%);
+            padding: 5px 10px;
+            overflow-y: auto;
+            max-height: 90vh;
+            position: relative;
+        }
+        .details-content img {
+            width: 100%;
+            height: 260px;
+            object-fit: cover;
+            display: block;
+        }
+        .details- body {
+            padding: 22px;
+        }
+        .details-body h2 {
+            margin-bottom: 8px; 
+        }
+        .details-body p {
+            color: #555;
+            line-height: 1.5;
+        }
+        .details-body p.rating {
+            color: #ff9800;
+            margin-bottom: 6px;
+        }
+        .details-body h4 {
+            margin: 14px 0 6px; 
+        }
+        .details-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .9);
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .details-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 12px 0;
+        }
+        .details-meta span {
+            background: #f1f1f1;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13.5px;
+        }
+        .related-restaurants {
+            display: grid;
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .related-products {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 10px;
+        }
+        .related-product {
+            background: #f8f8f8;
+            border: 1px solid #e2e2e2;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .related-product:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px #ccc;
+        }
+        .related-product img {
+            width: 100%;
+            height: 110px;
+            object-fit: cover;
+        }
+        .related-product-body {
+            padding: 10px;
+        }
+        .related-product-body h4 {
+            margin: 0 0 5px;
+            font-size: 16px;
+        }
+        .related-product-body p {
+            margin: 3px 0;
+            font-size: 13px;
+        }
+        .related-product-price {
+            font-weight: bold;
+            color: #e64a19;
+        }
+body.dark-mode .related-product {
+    background: #292929;
+    border-color: #444;
+}
+
+@media (max-width: 600px) {
+    .related-products {
+        grid-template-columns: 1fr;
+    }
+}
+
+.restaurant-card {
+    background: #f8f8f8;
+    border: 1px solid #e2e2e2;
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.restaurant-card strong {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.restaurant-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 13px;
+    color: #555;
+}
+
+.restaurant-info span {
+    background: white;
+    border-radius: 15px;
+    padding: 5px 9px;
+}
+
+.restaurant-open {
+    color: #2e7d32;
+    font-weight: bold;
+}
+
+body.dark-mode .restaurant-card {
+    background: #292929;
+    border-color: #444;
+}
+
+body.dark-mode .restaurant-info {
+    color: #ccc;
+}
+
+body.dark-mode .restaurant-info span {
+    background: #333;
+}
+
+.details-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.details-footer .price {
+    margin: 0;
+    color: #222;
+}
+
+.details-footer .order-btn {
+    width: auto;
+    padding: 12px 24px;
+}
+
+@media (max-width: 600px) {
+    .details-content img {
+        height: 200px;
+    }
+}
+
+.restaurant-section {
+    padding: 0 50px 40px;
+    display: none;
+}
+
+.restaurant-section h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 28px;
+}
+
+.restaurant-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+@media (max-width: 900px) {
+    .restaurant-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .restaurant-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .restaurant-section {
+        padding: 0 20px 30px;
+    }
+}
+
+body.dark-mode .restaurant-section h2 {
+    color: #eee;
+}
+
+.rest-card {
+    background: white;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px #ccc;
+    transition: 0.3s;
+}
+
+.rest-card:hover {
+    transform: translateY(-5px);
+}
+
+.rest-img {
+    position: relative;
+    height: 140px;
+    background: linear-gradient(135deg, #ff7043, #3c09f2);
+}
+
+.rest-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.rest-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+}
+
+.rest-badge.open {
+    background: #2e7d32;
+}
+
+.rest-badge.closed {
+    background: #d32f2f;
+}
+
+.rest-rating {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: white;
+    color: #333;
+    padding: 4px 9px;
+    border-radius: 15px;
+    font-size: 12.5px;
+    font-weight: bold;
+}
+
+.rest-body {
+    padding: 14px;
+}
+
+.rest-body h3 {
+    font-size: 18px;
+    margin-bottom: 4px;
+}
+
+.rest-cuisine {
+    color: #777;
+    font-size: 13.5px;
+    margin-bottom: 8px;
+}
+
+.rest-address {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.rest-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.rest-chips span {
+    background: #f1f1f1;
+    border-radius: 14px;
+    padding: 4px 9px;
+    font-size: 12.5px;
+}
+
+.rest-offer {
+    background: #fff3e0;
+    color: #e65100;
+    font-size: 12.5px;
+    padding: 6px 9px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.rest-match {
+    background: #e8f5e9;
+    color: #2e7d32;
+    font-size: 12.5px;
+    padding: 6px 9px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+body.dark-mode .rest-match {
+    background: #223024;
+    color: #8fd694;
+}
+
+.rest-timer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #eef0fb;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 13.5px;
+    font-weight: bold;
+    color: #3c09f2;
+}
+
+.rest-timer.open-timer {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.rest-timer.closed-timer {
+    background: #ffebee;
+    color: #d32f2f;
+}
+
+.rest-timer .clock {
+    font-family: monospace;
+    font-size: 15px;
+}
+
+body.dark-mode .rest-card {
+    background: #1f1f1f;
+    color: #eee;
+}
+
+body.dark-mode .rest-cuisine,
+body.dark-mode .rest-address {
+    color: #bbb;
+}
+
+body.dark-mode .rest-chips span {
+    background: #333;
+}
+
+.rm-timer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-weight: bold;
+    margin: 12px 0;
+}
+
+.rm-timer .clock {
+    font-family: monospace;
+    font-size: 17px;
+}
+
+.rm-timer.open-timer {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.rm-timer.closed-timer {
+    background: #ffebee;
+    color: #d32f2f;
+}
+
+.rm-status {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 12.5px;
+    font-weight: bold;
+    color: white;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+.rm-status.open {
+    background: #2e7d32;
+}
+
+.rm-status.closed {
+    background: #d32f2f;
+}
+
+.menu-add-btn {
+    width: 100%;
+    margin-top: 8px;
+    padding: 7px;
+    border: none;
+    border-radius: 7px;
+    background: #ff5722;
+    color: white;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.menu-add-btn:hover {
+    background: #e64a19;
+}
+
+.rest-card {
+    cursor: pointer;
+}
+
+.rest-hint {
+    text-align: center;
+    font-size: 12.5px;
+    color: #3c09f2;
+    margin-top: 8px;
+}
+
+body.dark-mode .rest-hint {
+    color: #9fa8ff;
+}
+
+#detailsModal {
+    z-index: 4100;
+}
+
+#loginScreen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #3c09f2, #ff7043);
+    padding: 20px;
+}
+
+.login-card {
+    background: white;
+    width: min(380px, 100%);
+    border-radius: 16px;
+    padding: 35px 30px;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, .3);
+    text-align: center;
+}
+
+.login-card .logo {
+    color: #3c09f2;
+    margin-bottom: 6px;
+}
+
+.login-card p.tag {
+    color: #777;
+    margin-bottom: 22px;
+    font-size: 14px;
+}
+
+.login-card input {
+    width: 100%;
+    padding: 12px 14px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+}
+
+.login-card input:focus {
+    border-color: #3c09f2;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 13px;
+    margin-top: 14px;
+    border: none;
+    border-radius: 8px;
+    background-color: #ff5722;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.login-btn:hover {
+    background-color: #e64a19;
+}
+
+.login-error {
+    color: #d32f2f;
+    font-size: 13.5px;
+    min-height: 18px;
+    margin-top: 8px;
+}
+
+.login-hint {
+    margin-top: 14px;
+    font-size: 12.5px;
+    color: #999;
+}
+
+.feature-btn {
+    border: none;
+    border-radius: 20px;
+    padding: 8px 12px;
+    margin-left: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    background: white;
+    color: #3c09f2;
+}
+
+.feature-btn:hover {
+    background: #eee;
+}
+
+.food-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    margin: -15px 0 20px;
+    flex-wrap: wrap;
+}
+
+.food-toolbar select {
+    padding: 9px 12px;
+    border: 1px solid #ccc;
+    background: white;
+    cursor: pointer;
+}
+
+.coupon-box {
+    display: flex;
+    gap: 7px;
+    margin: 10px 0;
+}
+
+.coupon-box input {
+    flex: 1;
+    padding: 9px;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+}
+
+.coupon-box button {
+    border: none;
+    border-radius: 7px;
+    padding: 9px 12px;
+    background: #3c09f2;
+    color: white;
+    cursor: pointer;
+}
+
+.coupon-message {
+    font-size: 13px;
+    margin-bottom: 8px;
+    min-height: 16px;
+}
+
+.coupon-success {
+    color: green;
+}
+
+.coupon-error {
+    color: #d32f2f;
+}
+
+#topButton {
+    display: none;
+    position: fixed;
+    right: 20px;
+    bottom: 25px;
+    width: 45px;
+    height: 45px;
+    border: none;
+    border-radius: 50%;
+    background: #3c09f2;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 4500;
+    box-shadow: 0 4px 12px #777;
+}
+
+.delivery-tracker {
+    margin-top: 15px;
+    padding: 12px;
+    background: #e8f5e9;
+    color: #2e7d32;
+    font-weight: bold;
+    text-align: center;
+}
+
+body.dark-mode {
+    background: #121212;
+    color: #eee;
+}
+
+body.dark-mode .food-card,
+body.dark-mode .cart-box,
+body.dark-mode .modal-content,
+body.dark-mode .category,
+body.dark-mode .food-toolbar select {
+    background: #1f1f1f;
+    color: #eee;
+}
+
+body.dark-mode .description,
+body.dark-mode .details-body p,
+body.dark-mode .empty,
+body.dark-mode .order-card .order-date {
+    color: #bbb;
+}
+
+body.dark-mode .order-card,
+body.dark-mode .fav-item-row,
+body.dark-mode .cart-item,
+body.dark-mode .bill-summary {
+    border-color: #444;
+}
+
+body.dark-mode .order-card {
+    background: #292929;
+}
+
+body.dark-mode .details-meta span {
+    background: #333;
+}
+
+body.dark-mode .food-toolbar select {
+    border-color: #555;
+}
+    </style>
+</head>
+<body>
+<div id="loginScreen">
+    <div class="login-card">
+        <div class="logo">&#x1F374; Foodie</div>
+        <p class="tag">Log in to order delicious food</p>
+        <input type="text" id="loginName" placeholder="Enter your name" autocomplete="name">
+        <input type="text" id="loginUsername" placeholder="Username" autocomplete="username">
+        <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password">
+        <button type="button" class="login-btn" id="loginBtn">Login</button>
+        <div class="login-error" id="loginError"></div>
+        <div class="login-hint" id="logoutMsg" style="display:none;color:#2e7d32;font-weight:bold;">&#9989; Logged out successfully!</div>
+        <div class="login-hint">Enter any username &amp; password to continue</div>
+    </div>
+</div>
+
+<div id="appContent" style="display:none;">
+<header>
+    <div class="logo">&#x1F374; Foodie </div>
+    <nav>
+        <a href="#" id="homeLink">Home</a>
+        <a href="#" id="menuLink">Menu</a>
+        <a href="#" id="offerLink">Offers</a>
+        <a href="#" id="contactLink">Contact</a>
+        <a href="#" id="favoritesLink">&#x2764; Favorites (<span id="favCount">0</span>)</a>
+        <a href="#" id="ordersLink">&#x1F4DC; Orders</a>
+        <span class="cart" id="cartButton"> &#x1F6D2; Cart (<span id="cartCount">0</span>)</span>
+        <span id="welcomeUser" style="margin-left:20px; font-weight:bold;"></span>
+        <button class="feature-btn" id="themeBtn" title="Toggle dark mode">&#x1F319;</button>
+        <button class="logout-btn" id="logoutBtn">&#x1F6AA; Logout</button>
+    </nav>
+</header>
+
+<section class="hero" id="home">
+    <h1>Delicious Food Near You &#x1F355;</h1>
+    <p>Discover tasty food and enjoy your favorite meals.</p>
+    <input type="text" class="search" id="search" placeholder="Search for food...">
+</section>
+
+<section class="categories">
+    <h2>Food Categories</h2>
+    <div class="category-container">
+        <div class="category active" data-filter="all"> &#x1F37D; All </div>
+        <div class="category" data-filter="pizza"><img src="download.jpg" alt="download"><span class="cat-name">Pizza</span></div>
+        <div class="category" data-filter="burger"><img src="Burger.jpg" alt="Burger"><span class="cat-name">Burger</span></div>
+        <div class="category" data-filter="chicken"><img src="Chicken.jpg" alt="Chicken"><span class="cat-name">Chicken</span></div>
+        <div class="category" data-filter="noodles"><img src="Noodles.jpg" alt="Noodles"><span class="cat-name">Noodles</span></div>
+        <div class="category" data-filter="dessert"><img src="Shortcake.jpg" alt="Shortcake"><span class="cat-name">Dessert</span></div>
+        <div class="category" data-filter="healthy"><img src="Green Salad.jpg" alt=""><span class="cat-name">Healthy</span></div>
+    </div>
+</section>
+
+<section class="food-section" id="menu">
+    <div class="food-toolbar">
+        <label for="sortFood"><strong>Sort:</strong></label>
+        <select id="sortFood">
+            <option value="default">Recommended</option>
+            <option value="low">Price: Low to High</option>
+            <option value="high">Price: High to Low</option>
+            <option value="rating">Rating: High to Low</option>
+        </select>
+    </div>
+    <div class="food-container">
+        <div class="food-card" data-category="pizza">
+            <button class="fav-btn" onclick="toggleFavorite(this)">&#x2661;</button>
+            <img src="download.jpg" alt="Pizza">
+            <div class="food-details">
+                <h3>Cheese Pizza </h3>
+                <p class="description">Fresh cheese pizza with delicious toppings.</p>
+                <p class="rating"> &#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50; 4.8 </p>
+                <p class="price"> &#8377;299 </p>
+                <button class="order-btn">Order Now</button>
+            </div>
+        </div>
+        <div class="food-card" data-category="burger">
+            <button class="fav-btn" onclick="toggleFavorite(this)">&#x2661;</button>
+            <img src="Burger.jpg" alt="Burger">
+            <div class="food-details">
+                <h3> Cheese Burger</h3>
+                <p class="description"> Juicy burger with cheese and fresh vegetables.</p>
+                <p class="rating"> &#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50; 4.7</p>
+                <p class="price"> &#8377;199 </p>
+                <button class="order-btn"> Order Now</button>
+            </div>
+        </div>
+        <div class="food-card" data-category="chicken">
+            <button class="fav-btn" onclick="toggleFavorite(this)">&#x2661;</button>
+            <img src="Chicken.jpg" alt="Chicken">
+            <div class="food-details">
+                <h3>Chicken Biryani</h3>
+                <p class="description"> Spicy and flavorful chicken biryani.</p>
+                <p class="rating"> &#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50; 4.9 </p>
+                <p class="price"> &#8377;249 </p>
+                <button class="order-btn">Order Now</button>
+            </div>
+        </div>
+        <div class="food-card" data-category="noodles">
+            <button class="fav-btn" onclick="toggleFavorite(this)">&#x2661;</button>
+            <img src="Noodles.jpg" alt="Noodles">
+            <div class="food-details">
+                <h3> Veg Noodles</h3>
+                <p class="description"> Delicious noodles with fresh vegetables. </p>
+                <p class="rating"> &#x2B50;&#x2B50;&#x2B50;&#x2B50; 4.5</p>
+                <p class="price"> &#8377;159 </p>
+                <button class="order-btn">Order Now</button>
+            </div>
+        </div>
+    </div>
+    <div class="food-container">
+        <div class="food-card" data-category="dessert">
+            <button class="fav-btn" onclick="toggleFavorite(this)">&#x2661;</button>
+            <img src="Shortcake.jpg" alt="Shortcake">
+            <div class="food-details">
+                <h3>Shortcake </h3>
+                <p class="description">Sweet, soft, and simply delicious!</p>
+                <p class="rating">&#x2B50;&#x2B50;&#x2B50;&#x2B50;4.5 </p>
+                <p class="price">&#8377;199 </p>
+                <button class="order-btn">Order Now</button>
+            </div>
+        </div>
+        <div class="food-card" data-category="healthy">
+            <button class="fav-btn" onclick="toggleFavorite(this)">&#x2661;</button>
+            <img src="Green Salad.jpg" alt="Green Salad">
+            <div class="food-details">
+                <h3>Green Salad</h3>
+                <p class="description">Fresh, healthy, and full of delicious goodness!</p>
+                <p class="rating">&#x2B50;&#x2B50;&#x2B50;&#x2B50;4.2</p>
+                <p class="price">&#8377;129</p>
+                <button class="order-btn">Order Now</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="restaurant-section" id="restaurantSection">
+    <h2 id="restaurantTitle"></h2>
+    <div class="restaurant-grid" id="restaurantGrid"></div>
+</section>
+
+<div class="cart-box" id="cartBox">
+    <h2>&#x1F6D2; Your Cart</h2>
+    <div id="cartItems"></div>
+    <div id="promoBanner" class="promo-banner" style="display:none;"></div>
+    <div class="coupon-box">
+        <input type="text" id="couponInput" placeholder="Coupon code (try FOOD10)">
+        <button id="applyCoupon">Apply</button>
+    </div>
+    <div class="coupon-message" id="couponMessage"></div>
+    <div class="bill-summary">
+        <div class="bill-row"><span>Subtotal:</span><span>&#8377;<span id="subtotal">0</span></span></div>
+        <div class="bill-row"><span>Delivery Fee:</span><span>&#8377;<span id="deliveryFee">0</span></span></div>
+        <div class="bill-row discount-row" id="discountRow">
+            <span>Discount<span id="discountBadge" class="discount-badge" style="display:none;"></span>:</span>
+            <span>- &#8377;<span id="discount">0</span></span>
+        </div>
+        <div class="bill-row"><span>GST (5%):</span><span>&#8377;<span id="gst">0</span></span></div>
+        <div class="bill-row grand-total"><span>Grand Total:</span><span>&#8377;<span id="cartTotal">0</span></span></div>
+    </div>
+    <button class="clear-cart-btn" id="clearCartBtn">&#x1F5D1; Clear Cart</button>
+    <button class="checkout-btn" id="checkoutBtn" style="padding-top: 5px;">&#x1F4B3; Checkout</button>
+</div>
+
+<div class="cart-box" id="favoritesBox">
+    <h2>&#x2764; Your Favorites</h2>
+    <div id="favoritesItems"></div>
+</div>
+<div class="cart-box" id="ordersBox">
+    <h2>&#x1F4DC; Order History</h2>
+    <div id="ordersItems"></div>
+</div>
+
+<div class="modal" id="detailsModal">
+    <div class="modal-content details-content">
+        <button class="details-close" id="detailsClose">&#10006;</button>
+        <img id="detailsImg" src="" alt="">
+        <div class="details-body">
+            <h2 id="detailsName"></h2>
+            <p class="rating" id="detailsRating"></p>
+            <p id="detailsDesc"></p>
+            <div class="details-meta" id="detailsMeta"></div>
+            <h4>Ingredients</h4>
+            <p id="detailsIngredients"></p>
+            <h4>&#127869; Related Restaurants</h4>
+            <p style="font-size:13px;color:#777;margin-bottom:8px;">Opening hours are shown for each restaurant. Status is based on the current time.</p>
+            <div id="relatedRestaurants" class="related-restaurants"></div>
+            <h4 style="margin-top:18px;">🍽 Related Products</h4>
+            <p style="font-size:13px;color:#777;margin-bottom:8px;">Products from the same food category. Click a product to see its details.</p>
+            <div id="relatedProducts" class="related-products"></div>
+            <div class="details-footer">
+                <p class="price">&#8377;<span id="detailsPrice"></span></p>
+                <button class="order-btn" id="detailsAddBtn">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="restaurantModal">
+    <div class="modal-content details-content">
+        <button class="details-close" id="rmClose">&#10006;</button>
+        <img id="rmImg" src="" alt="">
+        <div class="details-body">
+            <h2><span id="rmName"></span><span class="rm-status" id="rmStatus"></span></h2>
+            <p class="rating" id="rmRating"></p>
+            <p id="rmCuisine"></p>
+            <p id="rmAddress" style="margin-top:6px;"></p>
+            <p id="rmPhone"></p>
+            <div class="rm-timer" id="rmTimer"><span class="label"></span><span class="clock">--:--:--</span></div>
+            <div class="details-meta" id="rmMeta"></div>
+            <p id="rmOffer" class="promo-banner" style="text-align:left;"></p>
+            <h4>&#127869; Menu <span id="rmMenuCount" style="font-weight:normal;font-size:13px;color:#777;"></span></h4>
+            <p style="font-size:13px;color:#777;margin-bottom:8px;">Click a dish to see its details.</p>
+            <div id="rmMenu" class="related-products"></div>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal" id="clearCartModal">
+    <div class="modal-content">
+        <h2>&#128465; Clear Cart</h2>
+        <p style="margin-bottom:6px;color:#555;">Remove all items from your cart?</p>
+        <div class="modal-buttons">
+            <button class="close-modal" id="cancelClearCart">Cancel</button>
+            <button class="place-order" id="confirmClearCart">Clear Cart</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="checkoutModal">
+    <div class="modal-content">
+        <h2>  &#x1F374; Delivery Details</h2>
+        <input type="text" id="customerName" placeholder="Enter your name">
+        <input type="tel" id="customerPhone" placeholder="Enter mobile number">
+        <input type="text" id="customerAddress" placeholder="Enter delivery address">
+        <div class="modal-buttons">
+            <button class="close-modal" id="closeModal">Cancel</button>
+            <button class="place-order" id="placeOrder">Place Order</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="orderSuccessModal">
+    <div class="modal-content">
+        <h2>&#127881; Order Placed!</h2>
+        <p style="margin:6px 0;color:#555;">Customer: <strong id="successCustomer"></strong></p>
+        <div class="bill-summary">
+            <div class="bill-row"><span>Subtotal:</span><span>&#8377;<span id="successSubtotal">0</span></span></div>
+            <div class="bill-row"><span>Delivery Fee:</span><span>&#8377;<span id="successDelivery">0</span></span></div>
+            <div class="bill-row discount-row"><span>Discount:</span><span>- &#8377;<span id="successDiscount">0</span></span></div>
+            <div class="bill-row"><span>GST (5%):</span><span>&#8377;<span id="successGst">0</span></span></div>
+            <div class="bill-row grand-total"><span>Grand Total:</span><span>&#8377;<span id="successGrandTotal">0</span></span></div>
+        </div>
+        <p style="margin-top:10px;color:#555;">Your food will be delivered soon!</p>
+        <div class="delivery-tracker" id="deliveryTracker">Preparing your order... &#9203;</div>
+        <div class="modal-buttons">
+            <button class="place-order" id="closeOrderSuccess" style="flex:none;width:100%;">Done</button>
+        </div>
+    </div>
+</div>
+
+<button id="topButton" title="Back to top">&#8593;</button>
+<footer id="contact">
+    <p> &#169; 2026 Foodie | Delicious Food, Happy Life &#x1F374;</p>
+</footer>
+</div>
+
+<script>
+const loginScreen = document.getElementById("loginScreen");
+const appContent = document.getElementById("appContent");
+const loginBtn = document.getElementById("loginBtn");
+const loginName = document.getElementById("loginName");
+const loginUsername = document.getElementById("loginUsername");
+const loginPassword = document.getElementById("loginPassword");
+const loginError = document.getElementById("loginError");
+const logoutBtn = document.getElementById("logoutBtn");
+const welcomeUser = document.getElementById("welcomeUser");
+const logoutMsg = document.getElementById("logoutMsg");
+
+function showApp(username) {
+    loginScreen.style.display = "none";
+    appContent.style.display = "block";
+    if (username) welcomeUser.innerText = "Hi, " + username;
+}
+
+function showLogin(showLogoutMsg) {
+    appContent.style.display = "none";
+    loginScreen.style.display = "flex";
+    loginName.value = "";
+    loginUsername.value = "";
+    loginPassword.value = "";
+    loginError.innerText = "";
+    logoutMsg.style.display = showLogoutMsg ? "block" : "none";
+    loginName.focus();
+}
+
+function attemptLogin() {
+    const fullName = loginName.value.trim();
+    const user = loginUsername.value.trim();
+    const pass = loginPassword.value.trim();
+    if (!fullName || !user || !pass) {
+        loginError.innerText = "Please enter your name, username and password.";
+        return;
+    }
+    try {
+        sessionStorage.setItem("foodieLoggedIn", "true");
+        sessionStorage.setItem("foodieUsername", user);
+        sessionStorage.setItem("foodieName", fullName);
+    } catch (e) {}
+    logoutMsg.style.display = "none";
+    showApp(fullName);
+}
+
+loginBtn.addEventListener("click", attemptLogin);
+loginPassword.addEventListener("keydown", function(event) { if (event.key === "Enter") attemptLogin(); });
+loginName.addEventListener("keydown", function(event) { if (event.key === "Enter") loginUsername.focus(); });
+loginUsername.addEventListener("keydown", function(event) { if (event.key === "Enter") loginPassword.focus(); });
+
+logoutBtn.addEventListener("click", function() {
+    if (!confirm("Are you sure you want to logout?")) return;
+    try {
+        sessionStorage.removeItem("foodieLoggedIn");
+        sessionStorage.removeItem("foodieUsername");
+        sessionStorage.removeItem("foodieName");
+    } catch (e) {}
+    welcomeUser.innerText = "";
+    showLogin(true);
+});
+
+try {
+    if (sessionStorage.getItem("foodieLoggedIn") === "true") {
+        showApp(sessionStorage.getItem("foodieName") || sessionStorage.getItem("foodieUsername"));
+    }
+} catch (e) {}
+
+let cart = [];
+try { cart = JSON.parse(localStorage.getItem("foodieCart")) || []; } catch (e) { cart = []; }
+let favorites = [];
+try { favorites = JSON.parse(localStorage.getItem("foodieFavorites")) || []; } catch (e) { favorites = []; }
+let orders = [];
+try { orders = JSON.parse(localStorage.getItem("foodieOrders")) || []; } catch (e) { orders = []; }
+
+const DISCOUNT_THRESHOLD = 1000;
+const DISCOUNT_RATE = 0.10;
+const FREE_DELIVERY_THRESHOLD = 500;
+const DELIVERY_FEE = 40;
+let couponApplied = false;
+
+const cartButton = document.getElementById("cartButton");
+const cartBox = document.getElementById("cartBox");
+const cartItems = document.getElementById("cartItems");
+const cartCount = document.getElementById("cartCount");
+const cartTotal = document.getElementById("cartTotal");
+const subtotalElement = document.getElementById("subtotal");
+const deliveryFeeElement = document.getElementById("deliveryFee");
+const discountElement = document.getElementById("discount");
+const discountRow = document.getElementById("discountRow");
+const discountBadge = document.getElementById("discountBadge");
+const gstElement = document.getElementById("gst");
+const promoBanner = document.getElementById("promoBanner");
+const checkoutBtn = document.getElementById("checkoutBtn");
+const clearCartBtn = document.getElementById("clearCartBtn");
+const search = document.getElementById("search");
+const categories = document.querySelectorAll(".category");
+const foodCards = document.querySelectorAll(".food-card");
+const toast = document.getElementById("toast");
+const favoritesLink = document.getElementById("favoritesLink");
+const favoritesBox = document.getElementById("favoritesBox");
+const favoritesItems = document.getElementById("favoritesItems");
+const favCount = document.getElementById("favCount");
+const ordersLink = document.getElementById("ordersLink");
+const ordersBox = document.getElementById("ordersBox");
+const ordersItems = document.getElementById("ordersItems");
+const themeBtn = document.getElementById("themeBtn");
+const sortFood = document.getElementById("sortFood");
+const couponInput = document.getElementById("couponInput");
+const applyCoupon = document.getElementById("applyCoupon");
+const couponMessage = document.getElementById("couponMessage");
+const topButton = document.getElementById("topButton");
+const deliveryTracker = document.getElementById("deliveryTracker");
+const clearCartModal = document.getElementById("clearCartModal");
+const cancelClearCart = document.getElementById("cancelClearCart");
+const confirmClearCart = document.getElementById("confirmClearCart");
+const checkoutModal = document.getElementById("checkoutModal");
+const closeModal = document.getElementById("closeModal");
+const placeOrder = document.getElementById("placeOrder");
+const customerName = document.getElementById("customerName");
+const customerPhone = document.getElementById("customerPhone");
+const customerAddress = document.getElementById("customerAddress");
+const orderSuccessModal = document.getElementById("orderSuccessModal");
+const closeOrderSuccess = document.getElementById("closeOrderSuccess");
+
+closeOrderSuccess.addEventListener("click", () => orderSuccessModal.style.display = "none");
+orderSuccessModal.addEventListener("click", function(event) {
+    if (event.target === orderSuccessModal) orderSuccessModal.style.display = "none";
+});
+
+function showToast(message) {
+    toast.innerText = message;
+    toast.style.display = "block";
+    setTimeout(() => toast.style.display = "none", 2000);
+}
+
+function saveCart() { try { localStorage.setItem("foodieCart", JSON.stringify(cart)); } catch (e) {} }
+function getTotalQuantity() { return cart.reduce((sum, item) => sum + item.quantity, 0); }
+function formatINR(value) { return value.toLocaleString("en-IN", { maximumFractionDigits: 2 }); }
+
+function calculateBill() {
+    const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const deliveryFee = subtotal === 0 ? 0 : (subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_FEE);
+    const discount = subtotal >= DISCOUNT_THRESHOLD ? subtotal * DISCOUNT_RATE : 0;
+    const couponAmount = couponApplied ? Math.min(subtotal * 0.10, 100) : 0;
+    const totalDiscount = discount + couponAmount;
+    const taxableAmount = Math.max(0, subtotal - totalDiscount);
+    const gst = taxableAmount * 0.05;
+    const grandTotal = taxableAmount + gst + deliveryFee;
+    return { subtotal, deliveryFee, discount: totalDiscount, couponAmount, gst, grandTotal };
+}
+
+function getTotalPrice() { return calculateBill().grandTotal; }
+
+function updatePromoDisplay(bill) {
+    if (bill.discount > 0) {
+        discountRow.classList.remove("hidden");
+        discountBadge.style.display = "inline-block";
+        discountBadge.innerText = "10% OFF";
+    } else {
+        discountRow.classList.add("hidden");
+        discountBadge.style.display = "none";
+    }
+    if (cart.length === 0) { promoBanner.style.display = "none"; return; }
+    if (bill.discount > 0) {
+        promoBanner.className = "promo-banner success";
+        promoBanner.innerText = couponApplied
+            ? "🎉 You saved ₹" + formatINR(bill.discount) + " including coupon FOOD10!"
+            : "🎉 You saved ₹" + formatINR(bill.discount) + " with the 10% discount!";
+        promoBanner.style.display = "block";
+    } else {
+        const remaining = DISCOUNT_THRESHOLD - bill.subtotal;
+        promoBanner.className = "promo-banner";
+        promoBanner.innerText = "🔥 Add ₹" + formatINR(remaining) + " more to unlock 10% OFF!";
+        promoBanner.style.display = "block";
+    }
+}
+
+function displayCart() {
+    cartItems.innerHTML = "";
+    if (cart.length === 0) cartItems.innerHTML = '<p class="empty">Your cart is empty.</p>';
+    cart.forEach((item, index) => {
+        const div = document.createElement("div");
+        div.className = "cart-item";
+        div.innerHTML = `
+            <div>
+                <strong>${item.name}</strong><br>
+                ₹${item.price} × ${item.quantity}
+            </div>
+            <div class="cart-actions">
+                <button class="qty-btn" onclick="changeQuantity(${index}, -1)">−</button>
+                <span class="qty-number">${item.quantity}</span>
+                <button class="qty-btn" onclick="changeQuantity(${index}, 1)">+</button>
+                <button onclick="removeItem(${index})">&#10060;</button>
+            </div>
+        `;
+        cartItems.appendChild(div);
+    });
+    const bill = calculateBill();
+    cartCount.innerText = getTotalQuantity();
+    subtotalElement.innerText = formatINR(bill.subtotal);
+    deliveryFeeElement.innerText = formatINR(bill.deliveryFee);
+    discountElement.innerText = formatINR(bill.discount);
+    gstElement.innerText = formatINR(bill.gst);
+    cartTotal.innerText = formatINR(bill.grandTotal);
+    updatePromoDisplay(bill);
+}
+
+function saveFavorites() { try { localStorage.setItem("foodieFavorites", JSON.stringify(favorites)); } catch (e) {} }
+function isFavorite(name) { return favorites.some(item => item.name === name); }
+
+function syncFavButtons() {
+    document.querySelectorAll(".food-card").forEach(card => {
+        const name = card.querySelector("h3").innerText.trim();
+        const btn = card.querySelector(".fav-btn");
+        if (btn) {
+            if (isFavorite(name)) { btn.classList.add("active"); btn.innerHTML = "&#x2764;"; }
+            else { btn.classList.remove("active"); btn.innerHTML = "&#x2661;"; }
+        }
+    });
+    favCount.innerText = favorites.length;
+}
+
+function toggleFavorite(btn) {
+    const card = btn.closest(".food-card");
+    const name = card.querySelector("h3").innerText.trim();
+    const price = parseInt(card.querySelector(".price").innerText.replace(/[^\d]/g, ""));
+    const category = card.dataset.category;
+    const img = card.querySelector("img").getAttribute("src");
+    const index = favorites.findIndex(item => item.name === name);
+    if (index > -1) {
+        favorites.splice(index, 1);
+        showToast(name + " removed from favorites");
+    } else {
+        favorites.push({ name, price, category, img });
+        showToast(name + " added to favorites ❤️");
+    }
+    saveFavorites();
+    syncFavButtons();
+    displayFavorites();
+}
+window.toggleFavorite = toggleFavorite;
+
+function displayFavorites() {
+    favoritesItems.innerHTML = "";
+    if (favorites.length === 0) {
+        favoritesItems.innerHTML = '<p class="empty">No favorites yet. Tap the heart on any dish!</p>';
+        return;
+    }
+    favorites.forEach((item, index) => {
+        const div = document.createElement("div");
+        div.className = "fav-item-row";
+        div.innerHTML = `
+            <div>
+                <strong>${item.name}</strong><br>
+                ₹${item.price}
+            </div>
+            <div class="fav-actions">
+                <button class="fav-add-btn" onclick="addFavoriteToCart(${index})">Add to Cart</button>
+                <button class="fav-remove-btn" onclick="removeFavorite(${index})">Remove</button>
+            </div>
+        `;
+        favoritesItems.appendChild(div);
+    });
+}
+
+function addFavoriteToCart(index) {
+    const item = favorites[index];
+    const existingItem = cart.find(cartItem => cartItem.name === item.name);
+    if (existingItem) existingItem.quantity++;
+    else cart.push({ name: item.name, price: item.price, quantity: 1 });
+    saveCart();
+    displayCart();
+    showToast(item.name + " added to cart 🛒");
+}
+window.addFavoriteToCart = addFavoriteToCart;
+
+function removeFavorite(index) {
+    const name = favorites[index].name;
+    favorites.splice(index, 1);
+    saveFavorites();
+    syncFavButtons();
+    displayFavorites();
+    showToast(name + " removed from favorites");
+}
+window.removeFavorite = removeFavorite;
+
+function closeAllPanels() {
+    cartBox.style.display = "none";
+    favoritesBox.style.display = "none";
+    ordersBox.style.display = "none";
+}
+
+favoritesLink.addEventListener("click", function(event) {
+    event.preventDefault();
+    const willOpen = favoritesBox.style.display !== "block";
+    closeAllPanels();
+    if (willOpen) { displayFavorites(); favoritesBox.style.display = "block"; }
+});
+
+function saveOrders() { try { localStorage.setItem("foodieOrders", JSON.stringify(orders)); } catch (e) {} }
+
+function displayOrders() {
+    ordersItems.innerHTML = "";
+    if (orders.length === 0) {
+        ordersItems.innerHTML = '<p class="empty">No past orders yet.</p>';
+        return;
+    }
+    orders.slice().reverse().forEach(order => {
+        const div = document.createElement("div");
+        div.className = "order-card";
+        const itemsText = order.items.map(i => i.name + " ×" + i.quantity).join(", ");
+        div.innerHTML = `
+            <div class="order-date">${order.date} — ${order.customerName}</div>
+            <div class="order-items">${itemsText}</div>
+            <div class="order-total">Total: ₹${formatINR(order.grandTotal)}</div>
+        `;
+        ordersItems.appendChild(div);
+    });
+}
+
+ordersLink.addEventListener("click", function(event) {
+    event.preventDefault();
+    const willOpen = ordersBox.style.display !== "block";
+    closeAllPanels();
+    if (willOpen) { displayOrders(); ordersBox.style.display = "block"; }
+});
+
+function addToCart(button) {
+    const card = button.closest(".food-card");
+    const name = card.querySelector("h3").innerText.trim();
+    const price = parseInt(card.querySelector(".price").innerText.replace(/[^\d]/g, ""));
+    const restaurants = getRestaurantsForProduct(name);
+    const isAnyRestaurantOpen = restaurants.some(r => isRestaurantOpen(r.openT, r.closeT));
+    if (!isAnyRestaurantOpen) {
+        showToast("🔴 Restaurant is Closed Now! " + name + " is not available. Please try again during restaurant opening time.");
+        return;
+    }
+    const existingItem = cart.find(item => item.name === name);
+    if (existingItem) existingItem.quantity++;
+    else cart.push({ name: name, price: price, quantity: 1 });
+    saveCart();
+    displayCart();
+    showToast(name + " added to cart 🛒");
+}
+
+document.querySelectorAll(".order-btn").forEach(button => {
+    if (button.id === "detailsAddBtn") return;
+    button.addEventListener("click", () => addToCart(button));
+});
+
+function changeQuantity(index, amount) {
+    cart[index].quantity += amount;
+    if (cart[index].quantity <= 0) cart.splice(index, 1);
+    saveCart();
+    displayCart();
+}
+
+function removeItem(index) {
+    const itemName = cart[index].name;
+    cart.splice(index, 1);
+    saveCart();
+    displayCart();
+    showToast(itemName + " removed ❌");
+}
+window.changeQuantity = changeQuantity;
+window.removeItem = removeItem;
+
+cartButton.addEventListener("click", function(event) {
+    event.stopPropagation();
+    const willOpen = cartBox.style.display !== "block";
+    closeAllPanels();
+    if (willOpen) cartBox.style.display = "block";
+});
+
+document.addEventListener("click", function(event) {
+    if (!cartBox.contains(event.target) && !cartButton.contains(event.target) &&
+        !favoritesBox.contains(event.target) && !favoritesLink.contains(event.target) &&
+        !ordersBox.contains(event.target) && !ordersLink.contains(event.target)) {
+        closeAllPanels();
+    }
+});
+
+clearCartBtn.addEventListener("click", function() {
+    if (cart.length === 0) { showToast("Cart is already empty"); return; }
+    clearCartModal.style.display = "flex";
+});
+cancelClearCart.addEventListener("click", () => clearCartModal.style.display = "none");
+clearCartModal.addEventListener("click", function(event) {
+    if (event.target === clearCartModal) clearCartModal.style.display = "none";
+});
+confirmClearCart.addEventListener("click", function() {
+    cart = [];
+    saveCart();
+    displayCart();
+    clearCartModal.style.display = "none";
+    showToast("Cart cleared 🗑️");
+});
+
+checkoutBtn.addEventListener("click", function() {
+    if (cart.length === 0) { showToast("Your cart is empty!"); return; }
+    checkoutModal.style.display = "flex";
+});
+closeModal.addEventListener("click", () => checkoutModal.style.display = "none");
+checkoutModal.addEventListener("click", function(event) {
+    if (event.target === checkoutModal) checkoutModal.style.display = "none";
+});
+
+placeOrder.addEventListener("click", function() {
+    const name = customerName.value.trim();
+    const phone = customerPhone.value.trim();
+    const address = customerAddress.value.trim();
+    if (!name || !phone || !address) { showToast("Please fill all delivery details"); return; }
+    if (!/^[6-9]\d{9}$/.test(phone)) { showToast("Please enter a valid 10-digit mobile number"); return; }
+    const bill = calculateBill();
+    orders.push({
+        date: new Date().toLocaleString(),
+        customerName: name,
+        items: cart.map(i => ({ name: i.name, price: i.price, quantity: i.quantity })),
+        subtotal: bill.subtotal,
+        deliveryFee: bill.deliveryFee,
+        discount: bill.discount,
+        gst: bill.gst,
+        grandTotal: bill.grandTotal
+    });
+    saveOrders();
+    cart = [];
+    saveCart();
+    displayCart();
+    customerName.value = "";
+    customerPhone.value = "";
+    customerAddress.value = "";
+    checkoutModal.style.display = "none";
+    cartBox.style.display = "none";
+    showOrderSuccess(name, bill);
+});
+
+function showOrderSuccess(name, bill) {
+    document.getElementById("successCustomer").innerText = name;
+    document.getElementById("successSubtotal").innerText = formatINR(bill.subtotal);
+    document.getElementById("successDelivery").innerText = formatINR(bill.deliveryFee);
+    document.getElementById("successDiscount").innerText = formatINR(bill.discount);
+    document.getElementById("successGst").innerText = formatINR(bill.gst);
+    document.getElementById("successGrandTotal").innerText = formatINR(bill.grandTotal);
+    orderSuccessModal.style.display = "flex";
+    startDeliveryTracker();
+}
+
+try {
+    if (localStorage.getItem("foodieDarkMode") === "true") {
+        document.body.classList.add("dark-mode");
+        themeBtn.innerText = "☀️";
+    }
+} catch (e) {}
+
+themeBtn.addEventListener("click", function() {
+    document.body.classList.toggle("dark-mode");
+    const enabled = document.body.classList.contains("dark-mode");
+    themeBtn.innerText = enabled ? "☀️" : "🌙";
+    try { localStorage.setItem("foodieDarkMode", enabled); } catch (e) {}
+});
+
+sortFood.addEventListener("change", function() {
+    const cards = Array.from(document.querySelectorAll(".food-card"));
+    const containers = Array.from(document.querySelectorAll(".food-container"));
+    if (sortFood.value === "default") { location.reload(); return; }
+    cards.sort((a, b) => {
+        const priceA = parseInt(a.querySelector(".price").innerText.replace(/[^\d]/g, ""));
+        const priceB = parseInt(b.querySelector(".price").innerText.replace(/[^\d]/g, ""));
+        const ratingA = parseFloat(a.querySelector(".rating").innerText.match(/[\d.]+$/)?.[0] || 0);
+        const ratingB = parseFloat(b.querySelector(".rating").innerText.match(/[\d.]+$/)?.[0] || 0);
+        if (sortFood.value === "low") return priceA - priceB;
+        if (sortFood.value === "high") return priceB - priceA;
+        return ratingB - ratingA;
+    });
+    containers[0].innerHTML = "";
+    cards.forEach(card => containers[0].appendChild(card));
+    containers.slice(1).forEach(container => container.innerHTML = "");
+});
+
+applyCoupon.addEventListener("click", function() {
+    const code = couponInput.value.trim().toUpperCase();
+    if (code === "FOOD10") {
+        if (cart.length === 0) {
+            couponMessage.className = "coupon-message coupon-error";
+            couponMessage.innerText = "Add items to cart before applying a coupon.";
+            return;
+        }
+        couponApplied = true;
+        couponMessage.className = "coupon-message coupon-success";
+        couponMessage.innerText = "✅ FOOD10 applied — extra 10% OFF (up to ₹100).";
+        displayCart();
+    } else {
+        couponApplied = false;
+        couponMessage.className = "coupon-message coupon-error";
+        couponMessage.innerText = "❌ Invalid coupon code.";
+        displayCart();
+    }
+});
+
+window.addEventListener("scroll", function() {
+    topButton.style.display = window.scrollY > 350 ? "block" : "none";
+});
+topButton.addEventListener("click", function() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+function startDeliveryTracker() {
+    const steps = [
+        "👨‍🍳 Order confirmed",
+        "🍳 Food is being prepared",
+        "📦 Food is packed",
+        "🚚 Out for delivery",
+        "🎉 Delivered — enjoy your meal!"
+    ];
+    let index = 0;
+    deliveryTracker.innerText = steps[index];
+    const timer = setInterval(() => {
+        index++;
+        if (index >= steps.length) { clearInterval(timer); return; }
+        deliveryTracker.innerText = steps[index];
+    }, 2500);
+}
+
+const categoryRestaurantNames = {
+    pizza: ["Pizza Corner","Cheesy Bites","Oven Fresh","Slice House","Pizza Palace","Crust & Co","Napoli Express","Mozzarella Hub","Dough Brothers","Pizza Planet","Hot Slice","Margherita Point","Wood Fire Pizzeria","Cheese Crown","Pizza Junction"],
+    burger: ["Burger Hub","Big Bite Cafe","Grill House","Burger Barn","Patty Palace","Stack & Bun","Juicy Lucy's","Burger Brothers","The Burger Shed","Smash Point","Bun Town","Flame Grill","Burger Factory","Cheese Melt","Double Decker"],
+    chicken: ["Biryani House","Royal Biryani","Spice Kitchen","Chicken Corner","Tandoori Tales","Nawab's Kitchen","Hyderabad Handi","Grill Master","Crispy Wings","Dum Biryani Point","Masala Magic","Chicken Express","Kebab Junction","Spicy Treat","Flame Tikka"],
+    noodles: ["Noodle Point","Wok Express","Asian Bowl","Noodle Bar","Chopstick Corner","Dragon Wok","Ginger & Soy","Schezwan Street","Wok This Way","Noodle House","Tokyo Bowl","Chow Chow Cafe","Bamboo Wok","Spicy Noodle Hub","Lucky Dragon"],
+    dessert: ["Sweet Treats","Cake Corner","Dessert House","Sugar Rush","Bake Haven","Creamy Delights","The Cake Studio","Choco Heaven","Sweet Tooth","Frosting Fables","Sundae Street","Baker's Basket","Berry Bliss","Cupcake Cottage","Ice & Spice"],
+    healthy: ["Healthy Bowl","Fresh Garden","Green Cafe","Leaf & Co","Salad Station","Vitality Kitchen","Pure Greens","Fit Fork","Garden Bites","Nourish Bowl","The Salad Bar","Fresh Press","Green Plate","Wholesome Table","Organic Corner"]
+};
+const categoryLabels = { pizza: "Pizza", burger: "Burger", chicken: "Chicken", noodles: "Noodles", dessert: "Dessert", healthy: "Healthy" };
+const restaurantSection = document.getElementById("restaurantSection");
+const restaurantGrid = document.getElementById("restaurantGrid");
+const restaurantTitle = document.getElementById("restaurantTitle");
+
+function combinations(arr, k) {
+    if (k === 0) return [[]];
+    if (arr.length < k) return [];
+    const [first, ...rest] = arr;
+    return combinations(rest, k - 1).map(c => [first, ...c]).concat(combinations(rest, k));
+}
+
+function buildRestaurantMenu(category, i) {
+    const items = relatedProductCatalog.filter(p => p.category === category);
+    const n = items.length;
+    const size = Math.min(n, 4 + (i % 2));
+    const start = (i * 3) % n;
+    const menu = [];
+    for (let k = 0; k < size; k++) menu.push(items[(start + k) % n]);
+    return menu;
+}
+
+let restaurantList = [];
+let activeRestaurant = null;
+let activeMenu = [];
+const restaurantExtras = {
+    pizza:   { cuisine: "Italian • Pizza • Fast Food", img: "download.jpg", emoji: "🍕" },
+    burger:  { cuisine: "American • Burgers • Fast Food", img: "Burger.jpg", emoji: "🍔" },
+    chicken: { cuisine: "Biryani • Chicken • Mughlai", img: "Chicken.jpg", emoji: "🍗" },
+    noodles: { cuisine: "Chinese • Noodles • Asian", img: "Noodles.jpg", emoji: "🍜" },
+    dessert: { cuisine: "Desserts • Cakes • Bakery", img: "Shortcake.jpg", emoji: "🍰" },
+    healthy: { cuisine: "Healthy • Salads • Fresh", img: "Green Salad.jpg", emoji: "🥗" }
+};
+const restaurantAreas = ["MG Road", "Station Road", "Gandhi Nagar", "Market Street", "Park Avenue", "Temple Road", "Lake View Colony", "Main Bazaar", "Civil Lines", "New Town"];
+const restaurantOffers = ["10% OFF on first order", "Free delivery above ₹300", "Buy 1 Get 1 on select items", "Flat ₹50 OFF above ₹250", "No offer today"];
+
+function pad2(n) { return String(n).padStart(2, "0"); }
+
+function getTimerInfo(openT, closeT) {
+    const now = new Date();
+    const cur = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+    const [oh, om] = openT.split(":").map(Number);
+    const [ch, cm] = closeT.split(":").map(Number);
+    const open = oh * 3600 + om * 60;
+    const close = ch * 3600 + cm * 60;
+    let isOpen = false, label, secs;
+    if (cur >= open && cur < close) { isOpen = true; label = "⏳ Closes in"; secs = close - cur; }
+    else if (cur < open) { label = "⏰ Opens in"; secs = open - cur; }
+    else { label = "⏰ Opens in"; secs = 86400 - cur + open; }
+    const h = Math.floor(secs / 3600), m = Math.floor((secs % 3600) / 60), sec = secs % 60;
+    return { isOpen, label, clock: pad2(h) + ":" + pad2(m) + ":" + pad2(sec) };
+}
+
+function updateRestaurantTimers() {
+    document.querySelectorAll(".rest-card").forEach(card => {
+        const info = getTimerInfo(card.dataset.open, card.dataset.close);
+        const timer = card.querySelector(".rest-timer");
+        const badge = card.querySelector(".rest-badge");
+        timer.className = "rest-timer " + (info.isOpen ? "open-timer" : "closed-timer");
+        timer.querySelector(".label").innerText = info.label;
+        timer.querySelector(".clock").innerText = info.clock;
+        badge.className = "rest-badge " + (info.isOpen ? "open" : "closed");
+        badge.innerText = info.isOpen ? "🟢 Open Now" : "🔴 Closed";
+    });
+}
+setInterval(function() { updateRestaurantTimers(); updateModalTimer(); }, 1000);
+
+const menuSection = document.getElementById("menu");
+
+function buildRestaurants(category) {
+    const names = categoryRestaurantNames[category];
+    const extra = restaurantExtras[category];
+    const timings = categoryTimings[category];
+    return names.map((name, i) => {
+        const [openT, closeT] = timings[i];
+        return {
+            name, category, extra, openT, closeT, index: i,
+            rating: (4.0 + ((i * 7) % 10) / 10).toFixed(1),
+            prep: 10 + (i % 5) * 3,
+            delivery: 15 + (i % 6) * 3,
+            distance: (0.8 + (i * 0.7) % 6).toFixed(1),
+            priceForTwo: 200 + (i % 7) * 50,
+            area: restaurantAreas[(i * 3) % restaurantAreas.length],
+            offer: restaurantOffers[i % restaurantOffers.length],
+            phone: "+91 " + String(9000000000 + ((i + 1) * 76543211) % 999999999),
+            menu: buildRestaurantMenu(category, i)
+        };
+    });
+}
+
+let _allRestaurants = null;
+function getAllRestaurants() {
+    if (!_allRestaurants) {
+        _allRestaurants = [];
+        Object.keys(categoryRestaurantNames).forEach(cat => buildRestaurants(cat).forEach(r => _allRestaurants.push(r)));
+    }
+    return _allRestaurants;
+}
+function getRestaurantsForProduct(name) {
+    return getAllRestaurants().filter(r => r.menu.some(p => p.name === name));
+}
+
+function renderRestaurantCards(list) {
+    restaurantList = list;
+    restaurantGrid.innerHTML = list.map((r, i) => `
+        <div class="rest-card" data-index="${i}" data-open="${r.openT}" data-close="${r.closeT}">
+            <div class="rest-img">
+                <img src="${r.extra.img}" alt="${r.name}" onerror="this.style.display='none'">
+                <span class="rest-badge"></span>
+                <span class="rest-rating">${r.rating} ⭐</span>
+            </div>
+            <div class="rest-body">
+                <h3>${r.extra.emoji} ${r.name}</h3>
+                <div class="rest-cuisine">${r.extra.cuisine}</div>
+                <div class="rest-address">📍 ${r.area}, ${r.distance} km away</div>
+                ${r.matchedDishes ? `<div class="rest-match">✅ Serves: ${r.matchedDishes.map(d => d.name).join(", ")}</div>` : ""}
+                <div class="rest-chips">
+                    <span>👨‍🍳 Prep: ${r.prep} min</span>
+                    <span>🚴 Delivery: ${r.delivery} min</span>
+                    <span>💰 ₹${r.priceForTwo} for two</span>
+                    <span>🕐 ${formatTime(r.openT)} - ${formatTime(r.closeT)}</span>
+                </div>
+                <div class="rest-offer">🏷 ${r.offer}</div>
+                <div class="rest-timer"><span class="label"></span><span class="clock">--:--:--</span></div>
+                <div class="rest-hint">👆 Click to view details &amp; menu</div>
+            </div>
+        </div>`).join("");
+    restaurantSection.style.display = "block";
+    updateRestaurantTimers();
+}
+
+function showRestaurants(category) {
+    if (!categoryRestaurantNames[category]) {
+        restaurantSection.style.display = "none";
+        menuSection.style.display = "";
+        return;
+    }
+    menuSection.style.display = "none";
+    const list = buildRestaurants(category);
+    restaurantTitle.innerText = "🍴 " + list.length + " Restaurants for " + categoryLabels[category];
+    renderRestaurantCards(list);
+}
+
+function searchRestaurantsByProduct(query, category) {
+    const pool = category ? getAllRestaurants().filter(r => r.category === category) : getAllRestaurants();
+    const matches = [];
+    pool.forEach(r => {
+        const dishes = r.menu.filter(p => { const n = p.name.toLowerCase(); return n.includes(query) || (query.length > 3 && query.endsWith('s') && n.includes(query.slice(0, -1))); });
+        if (dishes.length) matches.push(Object.assign({}, r, { matchedDishes: dishes }));
+    });
+    const where = category ? " in " + categoryLabels[category] : "";
+    restaurantTitle.innerText = matches.length
+        ? "🍴 " + matches.length + ' Restaurants serving "' + query + '"' + where
+        : '😕 No restaurants found for "' + query + '"' + where;
+    renderRestaurantCards(matches);
+}
+
+const restaurantModal = document.getElementById("restaurantModal");
+function updateModalTimer() {
+    if (!activeRestaurant || restaurantModal.style.display !== "flex") return;
+    const info = getTimerInfo(activeRestaurant.openT, activeRestaurant.closeT);
+    const t = document.getElementById("rmTimer");
+    t.className = "rm-timer " + (info.isOpen ? "open-timer" : "closed-timer");
+    t.querySelector(".label").innerText = info.label;
+    t.querySelector(".clock").innerText = info.clock;
+    const st = document.getElementById("rmStatus");
+    st.className = "rm-status " + (info.isOpen ? "open" : "closed");
+    st.innerText = info.isOpen ? "Open Now" : "Closed";
+}
+
+function openRestaurantDetails(r) {
+    if (!r) return;
+    activeRestaurant = r;
+    const img = document.getElementById("rmImg");
+    img.style.display = "block";
+    img.onerror = function() { img.style.display = "none"; };
+    img.src = r.extra.img;
+    img.alt = r.name;
+    document.getElementById("rmName").innerText = r.extra.emoji + " " + r.name;
+    document.getElementById("rmRating").innerText = r.rating + " ⭐ rating";
+    document.getElementById("rmCuisine").innerText = r.extra.cuisine;
+    document.getElementById("rmAddress").innerText = "📍 " + r.area + ", " + r.distance + " km away";
+    document.getElementById("rmPhone").innerText = "📞 " + r.phone;
+    document.getElementById("rmOffer").innerText = "🏷 " + r.offer;
+    document.getElementById("rmMeta").innerHTML = `
+        <span>👨‍🍳 Prep: ${r.prep} min</span>
+        <span>🚴 Delivery: ${r.delivery} min</span>
+        <span>💰 ₹${r.priceForTwo} for two</span>
+        <span>🕐 ${formatTime(r.openT)} - ${formatTime(r.closeT)}</span>`;
+    activeMenu = r.menu;
+    document.getElementById("rmMenu").innerHTML = activeMenu.map((p, idx) => `
+        <div class="related-product" onclick="openMenuItemDetails(${idx})">
+            <img src="${p.img}" alt="${p.name}" onerror="this.style.display='none'">
+            <div class="related-product-body">
+                <h4>${p.name}</h4>
+                <p>${p.rating}</p>
+                <p class="related-product-price">₹${p.price}</p>
+                <button class="menu-add-btn" onclick="event.stopPropagation(); addRestaurantMenuItem(${idx})">Add to Cart</button>
+            </div>
+        </div>`).join("");
+    document.getElementById("rmMenuCount").innerText = "(" + activeMenu.length + " dishes)";
+    restaurantModal.style.display = "flex";
+    updateModalTimer();
+}
+
+function addRestaurantMenuItem(idx) {
+    const item = activeMenu[idx];
+    if (!item || !activeRestaurant) return;
+    if (!isRestaurantOpen(activeRestaurant.openT, activeRestaurant.closeT)) {
+        showToast("🔴 " + activeRestaurant.name + " is closed now. Opens at " + formatTime(activeRestaurant.openT));
+        return;
+    }
+    const existing = cart.find(c => c.name === item.name);
+    if (existing) existing.quantity++;
+    else cart.push({ name: item.name, price: item.price, quantity: 1 });
+    saveCart();
+    displayCart();
+    showToast(item.name + " added to cart 🛒");
+}
+window.addRestaurantMenuItem = addRestaurantMenuItem;
+
+function closeRestaurantDetails() { restaurantModal.style.display = "none"; }
+restaurantGrid.addEventListener("click", function(event) {
+    const card = event.target.closest(".rest-card");
+    if (card) openRestaurantDetails(restaurantList[card.dataset.index]);
+});
+document.getElementById("rmClose").addEventListener("click", closeRestaurantDetails);
+restaurantModal.addEventListener("click", function(event) {
+    if (event.target === restaurantModal) closeRestaurantDetails();
+});
+document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape") closeRestaurantDetails();
+});
+
+let activeCategory = "all";
+search.addEventListener("input", function() {
+    const value = search.value.toLowerCase().trim();
+    if (activeCategory !== "all") {
+        if (value === "") showRestaurants(activeCategory);
+        else searchRestaurantsByProduct(value, activeCategory);
+        return;
+    }
+    categories.forEach(c => c.classList.remove("active"));
+    document.querySelector('[data-filter="all"]').classList.add("active");
+    if (value === "") {
+        showRestaurants("all");
+        foodCards.forEach(card => card.style.display = "block");
+        return;
+    }
+    let anyCard = false;
+    foodCards.forEach(card => {
+        const show = card.innerText.toLowerCase().includes(value);
+        card.style.display = show ? "block" : "none";
+        if (show) anyCard = true;
+    });
+    menuSection.style.display = anyCard ? "" : "none";
+    searchRestaurantsByProduct(value);
+});
+
+const urlCategory = new URLSearchParams(location.search).get("category");
+
+function applyCategory(filter) {
+    activeCategory = filter;
+    categories.forEach(item => item.classList.toggle("active", item.dataset.filter === filter));
+    search.value = "";
+    foodCards.forEach(card => {
+        card.style.display = filter === "all" || card.dataset.category === filter ? "block" : "none";
+    });
+    showRestaurants(filter);
+}
+
+categories.forEach(category => {
+    category.addEventListener("click", function() {
+        const filter = category.dataset.filter;
+        if (filter !== "all" && !urlCategory) {
+            const url = location.href.split(/[?#]/)[0] + "?category=" + filter;
+            const tab = window.open(url, "_blank");
+            if (tab) return;
+        }
+        applyCategory(filter);
+    });
+});
+
+document.getElementById("homeLink").addEventListener("click", function(event) {
+    event.preventDefault();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+});
+document.getElementById("menuLink").addEventListener("click", function(event) {
+    event.preventDefault();
+    if (menuSection.style.display === "none") {
+        document.querySelector('[data-filter="all"]').click();
+    }
+    document.getElementById("menu").scrollIntoView({ behavior: "smooth" });
+});
+document.getElementById("offerLink").addEventListener("click", function(event) {
+    event.preventDefault();
+    alert("🔥 Special Offer!\n\n10% OFF on orders above ₹1000!");
+});
+document.getElementById("contactLink").addEventListener("click", function(event) {
+    event.preventDefault();
+    document.getElementById("contact").scrollIntoView({ behavior: "smooth" });
+});
+
+const productDetails = {
+    "Cheese Pizza":    { type: "Veg",     time: "20 min", calories: "285 kcal / slice", serves: "2", ingredients: "Pizza base, mozzarella, cheddar, tomato sauce, oregano, olive oil" },
+    "Cheese Burger":   { type: "Non-veg", time: "15 min", calories: "540 kcal",         serves: "1", ingredients: "Sesame bun, patty, cheese slice, lettuce, tomato, onion, house sauce" },
+    "Chicken Biryani": { type: "Non-veg", time: "35 min", calories: "650 kcal",         serves: "1", ingredients: "Basmati rice, chicken, yogurt, biryani masala, fried onions, mint, saffron" },
+    "Veg Noodles":     { type: "Veg",     time: "15 min", calories: "380 kcal",         serves: "1", ingredients: "Noodles, cabbage, carrot, capsicum, spring onion, soy sauce, garlic" },
+    "Shortcake":       { type: "Veg",     time: "10 min", calories: "320 kcal",         serves: "1", ingredients: "Sponge cake, whipped cream, strawberries, vanilla" },
+    "Green Salad":     { type: "Veg",     time: "5 min",  calories: "110 kcal",         serves: "1", ingredients: "Lettuce, cucumber, tomato, olives, lemon dressing, herbs" }
+};
+
+const timingSlots = [
+    ["13:00", "22:00"], ["10:00", "23:00"], ["14:00", "18:00"], ["07:00", "15:00"],
+    ["12:00", "17:30"], ["06:00", "21:00"], ["17:00", "23:30"], ["17:00", "22:00"]
+];
+const categoryTimings = {};
+Object.keys(categoryRestaurantNames).forEach((cat, c) => {
+    categoryTimings[cat] = categoryRestaurantNames[cat].map((_, i) => timingSlots[(i * 3 + c * 2) % timingSlots.length]);
+});
+
+function formatTime(time) {
+    const [hour, minute] = time.split(":").map(Number);
+    const suffix = hour >= 12 ? "PM" : "AM";
+    const h = hour % 12 || 12;
+    return `${h}:${String(minute).padStart(2, "0")} ${suffix}`;
+}
+
+function isRestaurantOpen(openTime, closeTime) {
+    const now = new Date();
+    const current = now.getHours() * 60 + now.getMinutes();
+    const [oh, om] = openTime.split(":").map(Number);
+    const [ch, cm] = closeTime.split(":").map(Number);
+    return current >= oh * 60 + om && current < ch * 60 + cm;
+}
+
+function renderDetailRestaurants(productName, emptyText) {
+    const restaurants = getRestaurantsForProduct(productName);
+    const box = document.getElementById("relatedRestaurants");
+    if (restaurants.length === 0) {
+        box.innerHTML = '<p class="empty">' + emptyText + '</p>';
+        return;
+    }
+    box.innerHTML = restaurants.map(r => {
+        const open = isRestaurantOpen(r.openT, r.closeT);
+        const statusText = open ? "🟢 Open Now" : "🔴 Closed Now";
+        return `
+            <div class="restaurant-card">
+                <strong>🍴 ${r.name}</strong>
+                <div class="restaurant-info">
+                    <span>${r.rating} ⭐</span>
+                    <span>👨‍🍳 Prep: ${r.prep} min</span>
+                    <span>🚴 Delivery: ${r.delivery} min</span>
+                    <span>🕐 Open: ${formatTime(r.openT)} - ${formatTime(r.closeT)}</span>
+                    <span class="restaurant-open" style="color:${open ? '#2e7d32' : '#d32f2f'}">${statusText}</span>
+                </div>
+            </div>`;
+    }).join("");
+}
+
+const detailsModal = document.getElementById("detailsModal");
+let detailsCard = null;
+let detailsSelectedProduct = null;
+let originalProductName = "";
+
+const relatedProductCatalog = [
+    { name: "Cheese Pizza", category: "pizza", img: "download.jpg", price: 299, rating: "⭐⭐⭐⭐⭐ 4.8", description: "Fresh cheese pizza with delicious toppings." },
+    { name: "Chicken Pizza", category: "pizza", img: "chicken pizza.jpg", price: 349, rating: "⭐⭐⭐⭐⭐ 4.7", description: "Tasty chicken pizza with melted cheese." },
+    { name: "Veg Pizza", category: "pizza", img: "veg pizza.jpg", price: 249, rating: "⭐⭐⭐⭐ 4.5", description: "Fresh vegetable pizza with delicious toppings." },
+    { name: "Paneer Pizza", category: "pizza", img: "paneer pizza.jpg", price: 329, rating: "⭐⭐⭐⭐⭐ 4.6", description: "Soft paneer with cheese on a crispy pizza base." },
+    { name: "Mushroom Pizza", category: "pizza", img: "mushroom pizza.jpg", price: 299, rating: "⭐⭐⭐⭐ 4.4", description: "Fresh mushrooms, cheese and herbs on a crispy pizza base." },
+
+    { name: "Margherita Pizza", category: "pizza", img: "Margherita Pizza.jpg", price: 229, rating: "⭐⭐⭐⭐ 4.5", description: "Classic pizza with tomato sauce, mozzarella and fresh basil." },
+    { name: "Pepperoni Pizza", category: "pizza", img: "Pepperoni Pizza.jpg", price: 369, rating: "⭐⭐⭐⭐⭐ 4.7", description: "Spicy pepperoni slices over melted mozzarella." },
+    { name: "BBQ Chicken Pizza", category: "pizza", img: "BBQ Chicken Pizza.jpg", price: 379, rating: "⭐⭐⭐⭐⭐ 4.7", description: "Smoky BBQ sauce with grilled chicken and onions." },
+    { name: "Farmhouse Pizza", category: "pizza", img: "Farmhouse Pizza.jpg", price: 319, rating: "⭐⭐⭐⭐ 4.6", description: "Loaded with capsicum, onion, tomato and mushrooms." },
+    { name: "Corn Cheese Pizza", category: "pizza", img: "Corn Cheese Pizza.jpg", price: 269, rating: "⭐⭐⭐⭐ 4.4", description: "Sweet corn and extra cheese on a crispy base." },
+    { name: "Double Cheese Pizza", category: "pizza", img: "Double Cheese Pizza.jpg", price: 339, rating: "⭐⭐⭐⭐⭐ 4.8", description: "Extra layers of gooey mozzarella and cheddar." },
+
+    { name: "Cheese Burger", category: "burger", img: "Burger.jpg", price: 199, rating: "⭐⭐⭐⭐ 4.7", description: "Juicy burger with cheese and fresh vegetables." },
+    { name: "Chicken Burger", category: "burger", img: "chicken burger.jpg", price: 249, rating: "⭐⭐⭐⭐⭐ 4.8", description: "Juicy chicken burger with fresh vegetables." },
+    { name: "Veg Burger", category: "burger", img: "veg b.jpg", price: 149, rating: "⭐⭐⭐⭐ 4.5", description: "Crispy veg patty burger with fresh vegetables." },
+    { name: "Double Cheese Burger", category: "burger", img: "double b.jpg", price: 279, rating: "⭐⭐⭐⭐⭐ 4.9", description: "Double cheese burger with a delicious creamy taste." },
+    { name: "Paneer Burger", category: "burger", img: "paneer burger.jpg", price: 189, rating: "⭐⭐⭐⭐⭐ 4.6", description: "Crispy paneer patty with fresh vegetables and creamy sauce." },
+
+    { name: "Aloo Tikki Burger", category: "burger", img: "Aloo Tikki Burger.jpg", price: 129, rating: "⭐⭐⭐⭐ 4.3", description: "Crispy spiced potato patty with mint mayo." },
+    { name: "Crispy Chicken Zinger Burger", category: "burger", img: "Crispy Chicken Zinger Burger.jpg", price: 269, rating: "⭐⭐⭐⭐⭐ 4.8", description: "Crunchy fried chicken fillet with spicy sauce." },
+    { name: "Grilled Chicken Burger", category: "burger", img: "Grilled Chicken Burger.jpg", price: 259, rating: "⭐⭐⭐⭐ 4.6", description: "Grilled chicken breast with lettuce and herb sauce." },
+    { name: "Mutton Burger", category: "burger", img: "Mutton Burger.jpg", price: 299, rating: "⭐⭐⭐⭐ 4.5", description: "Juicy mutton patty with onions and special sauce." },
+    { name: "Egg Burger", category: "burger", img: "Egg Burger.jpg", price: 139, rating: "⭐⭐⭐⭐ 4.3", description: "Fried egg, cheese and fresh veggies in a soft bun." },
+    { name: "Mexican Veg Burger", category: "burger", img: "Mexican Veg Burger.jpg", price: 169, rating: "⭐⭐⭐⭐ 4.4", description: "Bean and veggie patty with jalapeño and salsa." },
+
+    { name: "Chicken", category: "chicken", img: "Chicken.jpg", price: 219, rating: "⭐⭐⭐⭐⭐ 4.9", description: "Aromatic chicken biryani with basmati rice." },
+    { name: "Chicken Biryani", category: "chicken", img: "Chicken Biryani.jpg", price: 249, rating: "⭐⭐⭐⭐⭐ 4.9", description: "Aromatic chicken biryani with basmati rice." },
+    { name: "Hyderabadi Chicken Biryani", category: "chicken", img: "Hyderabadi Chicken Biryani.jpg", price: 279, rating: "⭐⭐⭐⭐⭐ 4.9", description: "Authentic Hyderabadi dum biryani with tender chicken and saffron rice." },
+    { name: "Chicken Dum Biryani", category: "chicken", img: "Chicken Dum Biryani.jpg", price: 259, rating: "⭐⭐⭐⭐⭐ 4.8", description: "Slow-cooked dum biryani sealed and steamed with spices." },
+    { name: "Mutton Biryani", category: "chicken", img: "Mutton Biryani.jpg", price: 329, rating: "⭐⭐⭐⭐⭐ 4.8", description: "Rich mutton biryani with long-grain basmati and whole spices." },
+    { name: "Egg Biryani", category: "chicken", img: "Egg Biryani.jpg", price: 189, rating: "⭐⭐⭐⭐ 4.5", description: "Spiced boiled eggs layered with fragrant biryani rice." },
+    { name: "Prawn Biryani", category: "chicken", img: "Prawn Biryani.jpg", price: 349, rating: "⭐⭐⭐⭐ 4.6", description: "Juicy prawns cooked with masala and basmati rice." },
+    { name: "Veg Biryani", category: "chicken", img: "Veg Biryani.jpg", price: 169, rating: "⭐⭐⭐⭐ 4.4", description: "Mixed vegetable biryani with mint and fried onions." },
+    { name: "Paneer Biryani", category: "chicken", img: "Paneer Biryani.jpg", price: 199, rating: "⭐⭐⭐⭐ 4.5", description: "Soft paneer cubes layered with spiced basmati rice." },
+    { name: "Chicken 65", category: "chicken", img: "chicken 65.jpg", price: 199, rating: "⭐⭐⭐⭐⭐ 4.7", description: "Crispy and spicy Chicken 65." },
+    { name: "Chicken Fried Rice", category: "chicken", img: "fride rice.jpg", price: 219, rating: "⭐⭐⭐⭐ 4.6", description: "Delicious fried rice with juicy chicken pieces." },
+    { name: "Chicken Tikka", category: "chicken", img: "tikka.jpg", price: 229, rating: "⭐⭐⭐⭐⭐ 4.8", description: "Soft and spicy grilled chicken tikka." },
+    { name: "Chicken Kebab", category: "chicken", img: "chicken kebab.jpg", price: 259, rating: "⭐⭐⭐⭐⭐ 4.7", description: "Juicy chicken pieces grilled with flavorful herbs and spices." },
+
+    { name: "Veg Noodles", category: "noodles", img: "Noodles.jpg", price: 159, rating: "⭐⭐⭐⭐ 4.5", description: "Delicious noodles with fresh vegetables." },
+    { name: "Chicken Noodles", category: "noodles", img: "chicken noodles.jpg", price: 199, rating: "⭐⭐⭐⭐⭐ 4.7", description: "Tasty noodles with chicken and vegetables." },
+    { name: "Schezwan Noodles", category: "noodles", img: "schazwan.jpg", price: 179, rating: "⭐⭐⭐⭐ 4.6", description: "Spicy Schezwan noodles with fresh vegetables." },
+    { name: "Egg Noodles", category: "noodles", img: "egg.jpg", price: 189, rating: "⭐⭐⭐⭐ 4.5", description: "Tasty noodles with scrambled egg and vegetables." },
+    { name: "Paneer Noodles", category: "noodles", img: "paneer noodles.jpg", price: 189, rating: "⭐⭐⭐⭐⭐ 4.6", description: "Soft noodles combined with spicy paneer pieces and vegetables." },
+
+    { name: "Hakka Noodles", category: "noodles", img: "Hakka Noodles.jpg", price: 169, rating: "⭐⭐⭐⭐ 4.6", description: "Stir-fried Hakka noodles with crunchy vegetables." },
+    { name: "Singapore Noodles", category: "noodles", img: "Singapore Noodles.jpg", price: 199, rating: "⭐⭐⭐⭐ 4.5", description: "Thin rice noodles tossed with curry spices and veggies." },
+    { name: "Prawn Noodles", category: "noodles", img: "Prawn Noodles.jpg", price: 249, rating: "⭐⭐⭐⭐ 4.5", description: "Wok-tossed noodles with juicy prawns." },
+    { name: "Chilli Garlic Noodles", category: "noodles", img: "Chilli Garlic Noodles.jpg", price: 179, rating: "⭐⭐⭐⭐ 4.6", description: "Spicy garlic-flavoured noodles with spring onions." },
+    { name: "Mushroom Noodles", category: "noodles", img: "Mushroom Noodles.jpg", price: 189, rating: "⭐⭐⭐⭐ 4.4", description: "Noodles tossed with fresh mushrooms and soy sauce." },
+    { name: "Manchurian Noodles", category: "noodles", img: "Manchurian Noodles.jpg", price: 189, rating: "⭐⭐⭐⭐ 4.5", description: "Noodles served with tangy veg Manchurian balls." },
+
+    { name: "Shortcake", category: "dessert", img: "Shortcake.jpg", price: 199, rating: "⭐⭐⭐⭐ 4.5", description: "Sweet, soft, and simply delicious!" },
+    { name: "Chocolate Cake", category: "dessert", img: "chocolate.jpg", price: 249, rating: "⭐⭐⭐⭐⭐ 4.8", description: "Rich and delicious chocolate cake." },
+    { name: "Strawberry Cake", category: "dessert", img: "strawberry.jpg", price: 229, rating: "⭐⭐⭐⭐ 4.6", description: "Soft strawberry cake with creamy topping." },
+    { name: "Vanilla Cake", category: "dessert", img: "vanilla.jpg", price: 219, rating: "⭐⭐⭐⭐ 4.5", description: "Soft vanilla cake with a smooth cream layer." },
+    { name: "Ice Cream", category: "dessert", img: "ice cream.jpg", price: 99, rating: "⭐⭐⭐⭐ 4.5", description: "Creamy and refreshing vanilla ice cream with a sweet flavor." },
+
+    { name: "Chocolate Brownie", category: "dessert", img: "Chocolate Brownie.jpg", price: 129, rating: "⭐⭐⭐⭐⭐ 4.7", description: "Warm fudgy brownie with chocolate chunks." },
+    { name: "Black Forest Cake", category: "dessert", img: "Black Forest Cake.jpg", price: 239, rating: "⭐⭐⭐⭐⭐ 4.7", description: "Chocolate sponge with cream and cherries." },
+    { name: "Red Velvet Cake", category: "dessert", img: "Red Velvet Cake.jpg", price: 259, rating: "⭐⭐⭐⭐⭐ 4.8", description: "Soft red velvet layers with cream cheese frosting." },
+    { name: "Pineapple Cake", category: "dessert", img: "Pineapple Cake.jpg", price: 219, rating: "⭐⭐⭐⭐ 4.5", description: "Light sponge with pineapple pieces and fresh cream." },
+    { name: "Gulab Jamun", category: "dessert", img: "Gulab Jamun.jpg", price: 89, rating: "⭐⭐⭐⭐⭐ 4.6", description: "Soft milk dumplings soaked in sugar syrup." },
+    { name: "Rasmalai", category: "dessert", img: "Rasmalai.jpg", price: 119, rating: "⭐⭐⭐⭐⭐ 4.7", description: "Spongy cottage-cheese discs in saffron milk." },
+
+    { name: "Green Salad", category: "healthy", img: "Green Salad.jpg", price: 129, rating: "⭐⭐⭐⭐ 4.2", description: "Fresh, healthy, and full of delicious goodness!" },
+    { name: "Fruit Salad", category: "healthy", img: "friut salad.jpg", price: 149, rating: "⭐⭐⭐⭐⭐ 4.6", description: "Fresh seasonal fruits served healthy and delicious." },
+    { name: "Paneer Salad", category: "healthy", img: "salad.jpg", price: 179, rating: "⭐⭐⭐⭐ 4.5", description: "Healthy salad with fresh vegetables and paneer." },
+    { name: "Corn Salad", category: "healthy", img: "corn.jpg", price: 139, rating: "⭐⭐⭐⭐ 4.4", description: "Fresh corn salad with vegetables and herbs." },
+    { name: "Chicken Salad", category: "healthy", img: "chicken salad.jpg", price: 219, rating: "⭐⭐⭐⭐⭐ 4.7", description: "Grilled chicken combined with fresh vegetables and healthy dressing." },
+
+    { name: "Greek Salad", category: "healthy", img: "Greek Salad.jpg", price: 189, rating: "⭐⭐⭐⭐ 4.5", description: "Cucumber, tomato, olives and feta with olive oil." },
+    { name: "Caesar Salad", category: "healthy", img: "Caesar Salad.jpg", price: 199, rating: "⭐⭐⭐⭐ 4.5", description: "Crisp lettuce, croutons and Caesar dressing." },
+    { name: "Sprouts Salad", category: "healthy", img: "Sprouts Salad.jpg", price: 119, rating: "⭐⭐⭐⭐ 4.3", description: "Protein-rich sprouts with onion, tomato and lemon." },
+    { name: "Quinoa Salad", category: "healthy", img: "Quinoa Salad.jpg", price: 229, rating: "⭐⭐⭐⭐⭐ 4.6", description: "Quinoa with fresh vegetables and herb dressing." },
+    { name: "Cucumber Salad", category: "healthy", img: "Cucumber Salad.jpg", price: 99, rating: "⭐⭐⭐⭐ 4.2", description: "Cool cucumber with mint and lemon." },
+    { name: "Egg Salad", category: "healthy", img: "Egg Salad.jpg", price: 159, rating: "⭐⭐⭐⭐ 4.4", description: "Boiled eggs with greens and light dressing." }
+];
+
+function displayRelatedProducts(currentName) {
+    const relatedProducts = document.getElementById("relatedProducts");
+    if (!relatedProducts) return;
+    const currentCard = Array.from(document.querySelectorAll(".food-card"))
+        .find(card => card.querySelector("h3").innerText.trim() === currentName);
+    const currentCategory = currentCard ? currentCard.dataset.category :
+        (relatedProductCatalog.find(product => product.name === currentName) || {}).category;
+    const related = (detailsRestaurant
+        ? detailsRestaurant.menu.filter(product => product.name !== currentName)
+        : relatedProductCatalog.filter(product =>
+            product.category === currentCategory && product.name !== currentName
+          )).slice(0, 4);
+    if (related.length === 0) {
+        relatedProducts.innerHTML = '<p class="empty">No related products available.</p>';
+        return;
+    }
+    relatedProducts.innerHTML = related.map(product => `
+        <div class="related-product" onclick='openRelatedProduct(${JSON.stringify(product)})'>
+            <img src="${product.img}" alt="${product.name}">
+            <div class="related-product-body">
+                <h4>${product.name}</h4>
+                <p>${product.rating}</p>
+                <p class="related-product-price">₹${product.price}</p>
+            </div>
+        </div>
+    `).join("");
+}
+
+let detailsRestaurant = null;
+
+function getProductInfo(product) {
+    if (productDetails[product.name]) return productDetails[product.name];
+    const nonVeg = /chicken|egg|mutton|prawn|pepperoni/i.test(product.name) || (product.category === "chicken" && !/veg|paneer/i.test(product.name));
+    const byCat = {
+        pizza:   { time: "20 min", calories: "280 kcal / slice", serves: "2", base: "Pizza base, mozzarella, tomato sauce, herbs, olive oil" },
+        burger:  { time: "15 min", calories: "450 kcal",         serves: "1", base: "Sesame bun, patty, lettuce, tomato, onion, house sauce" },
+        chicken: { time: "25 min", calories: "500 kcal",         serves: "1", base: "Chicken, spices, ginger-garlic paste, onion, fresh herbs" },
+        noodles: { time: "15 min", calories: "380 kcal",         serves: "1", base: "Noodles, spring onion, soy sauce, garlic, vegetables" },
+        dessert: { time: "10 min", calories: "320 kcal",         serves: "1", base: "Flour, sugar, cream, butter, vanilla" },
+        healthy: { time: "5 min",  calories: "150 kcal",         serves: "1", base: "Fresh vegetables, herbs, lemon dressing" }
+    };
+    const c = byCat[product.category] || { time: "20 min", calories: "Details coming soon.", serves: "1", base: "Fresh ingredients prepared with care." };
+    return { type: nonVeg ? "Non-veg" : "Veg", time: c.time, calories: c.calories, serves: c.serves, ingredients: c.base };
+}
+
+function openRelatedProduct(product) {
+    detailsCard = null;
+    detailsSelectedProduct = product;
+    const info = getProductInfo(product);
+    document.getElementById("detailsImg").style.display = "block";
+    document.getElementById("detailsImg").src = product.img;
+    document.getElementById("detailsImg").alt = product.name;
+    document.getElementById("detailsName").innerText = product.name;
+    document.getElementById("detailsRating").innerText = product.rating;
+    document.getElementById("detailsDesc").innerText = product.description;
+    document.getElementById("detailsPrice").innerText = product.price;
+    document.getElementById("detailsIngredients").innerText = info.ingredients;
+    document.getElementById("detailsMeta").innerHTML = `
+        <span>${info.type === "Veg" ? "🟢" : "🔴"} ${info.type}</span>
+        <span>⏱ ${info.time}</span>
+        <span>🔥 ${info.calories}</span>
+        <span>🍽 Serves ${info.serves}</span>`;
+
+    if (detailsRestaurant) {
+        const r = detailsRestaurant;
+        const open = isRestaurantOpen(r.openT, r.closeT);
+        document.getElementById("relatedRestaurants").innerHTML = `
+            <div class="restaurant-card">
+                <strong>🍴 ${r.name}</strong>
+                <div class="restaurant-info">
+                    <span>${r.rating} ⭐</span>
+                    <span>👨‍🍳 Prep: ${r.prep} min</span>
+                    <span>🚴 Delivery: ${r.delivery} min</span>
+                    <span>🕐 Open: ${formatTime(r.openT)} - ${formatTime(r.closeT)}</span>
+                    <span class="restaurant-open" style="color:${open ? '#2e7d32' : '#d32f2f'}">${open ? "🟢 Open Now" : "🔴 Closed Now"}</span>
+                </div>
+            </div>`;
+    } else {
+        renderDetailRestaurants(originalProductName, "Restaurant information will be available soon.");
+    }
+    displayRelatedProducts(product.name);
+    detailsModal.style.display = "flex";
+    detailsModal.querySelector(".details-content").scrollTop = 0;
+}
+
+function openMenuItemDetails(idx) {
+    const item = activeMenu[idx];
+    if (!item) return;
+    detailsRestaurant = activeRestaurant;
+    openRelatedProduct(item);
+}
+window.openMenuItemDetails = openMenuItemDetails;
+window.openRelatedProduct = openRelatedProduct;
+
+function addRelatedProductToCart(product) {
+    if (detailsRestaurant && !isRestaurantOpen(detailsRestaurant.openT, detailsRestaurant.closeT)) {
+        showToast("🔴 " + detailsRestaurant.name + " is closed now. Opens at " + formatTime(detailsRestaurant.openT));
+        return;
+    }
+    const existingItem = cart.find(item => item.name === product.name);
+    if (existingItem) existingItem.quantity++;
+    else cart.push({ name: product.name, price: product.price, quantity: 1 });
+    saveCart();
+    displayCart();
+    showToast(product.name + " added to cart 🛒");
+}
+
+function openDetails(card) {
+    detailsRestaurant = null;
+    detailsCard = card;
+    const name = card.querySelector("h3").innerText.trim();
+    originalProductName = name;
+    detailsSelectedProduct = null;
+    displayRelatedProducts(name);
+    const info = productDetails[name] || {};
+    const img = document.getElementById("detailsImg");
+    img.src = card.querySelector("img").getAttribute("src");
+    img.alt = name;
+    document.getElementById("detailsName").innerText = name;
+    document.getElementById("detailsRating").innerText = card.querySelector(".rating").innerText.trim();
+    document.getElementById("detailsDesc").innerText = card.querySelector(".description").innerText.trim();
+    document.getElementById("detailsPrice").innerText = card.querySelector(".price").innerText.replace(/[^\d]/g, "");
+    document.getElementById("detailsIngredients").innerText = info.ingredients || "Details coming soon.";
+    renderDetailRestaurants(name, "No restaurant information available.");
+    document.getElementById("detailsMeta").innerHTML = info.type ? `
+        <span>${info.type === "Veg" ? "🟢" : "🔴"} ${info.type}</span>
+        <span>⏱ ${info.time}</span>
+        <span>🔥 ${info.calories}</span>
+        <span>🍽 Serves ${info.serves}</span>` : "";
+    detailsModal.style.display = "flex";
+}
+
+function closeDetails() { detailsModal.style.display = "none"; }
+
+foodCards.forEach(card => {
+    card.addEventListener("click", function(event) {
+        if (event.target.closest(".fav-btn") || event.target.closest(".order-btn")) return;
+        openDetails(card);
+    });
+});
+
+document.getElementById("detailsAddBtn").addEventListener("click", function() {
+    if (detailsCard) addToCart(detailsCard.querySelector(".order-btn"));
+    else if (detailsSelectedProduct) addRelatedProductToCart(detailsSelectedProduct);
+});
+document.getElementById("detailsClose").addEventListener("click", closeDetails);
+detailsModal.addEventListener("click", function(event) {
+    if (event.target === detailsModal) closeDetails();
+});
+document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape") closeDetails();
+});
+
+displayCart();
+syncFavButtons();
+
+if (urlCategory && categoryRestaurantNames[urlCategory]) {
+    let who = "";
+    try { who = sessionStorage.getItem("foodieName") || sessionStorage.getItem("foodieUsername") || ""; } catch (e) {}
+    showApp(who || "Guest");
+    applyCategory(urlCategory);
+    document.title = "Foodie - " + categoryLabels[urlCategory];
+}
+</script>
+</body>
+</html>
